@@ -12,7 +12,7 @@ module.exports = {
     voiceOnly: true,
     timeout: 15000,
     tempOnly: true,
-    voiceOwnerOnly: true,
+    allowManagers: true,
     run: async(interaction) => {
         // get number of limit from option.
         const number = interaction.options.getInteger('number');

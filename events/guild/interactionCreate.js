@@ -1,6 +1,7 @@
 const Timeout = new Set()
 const { MessageEmbed } = require('discord.js');
 const humanizeDuration = require("humanize-duration");
+const { Modal, TextInputComponent, showModal } = require('discord-modals');
 
 module.exports = async(client, interaction) => {
     if (interaction.isCommand() || interaction.isContextMenu()) {
@@ -55,6 +56,16 @@ module.exports = async(client, interaction) => {
 					})
 				}
 			}
+			if (command.allowManagers) {
+				if (voiceData.owner !== interaction.user.id) {
+					if (!voiceData.managers.includes(interaction.user.id)) {
+						return interaction.reply({
+							content: ":x: You must be manager in voice channel to do this command.",
+							ephemeral: true
+						})
+					}
+				}
+			}
 			if (command.voiceOwnerOnly) {
 				if (voiceData.owner !== interaction.user.id) {
 					return interaction.reply({
@@ -75,31 +86,41 @@ module.exports = async(client, interaction) => {
 	}
 	try {
 		if (interaction.isSelectMenu()) {
-			if (interaction.customId === 'ticket_cmd' || interaction.customId === 'info_cmd' || interaction.customId === 'general_cmd') {
-				const selectedValues = interaction.values;
-				const findCommand = client.commands.find(r => r.name === selectedValues[0])
-				if (selectedValues.includes(findCommand.name)) {
-					const embed = new MessageEmbed()
-					.setColor(interaction.guild.me.displayHexColor)
-					.setFooter({ text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
-					if (findCommand.name) {
-						embed.setTitle(`Command: ${findCommand.name}`)
-					}
-					if (findCommand.description) {
-						embed.setDescription(findCommand.description)
-					}
-					if (findCommand.usage) {
-						embed.addField("Usage:", findCommand.usage)
-					}
-					if (findCommand.timeout) {
-						embed.addField("Timeout:", humanizeDuration(findCommand.timeout, { round: true }))
-					}
-					interaction.message.edit({
-						embeds: [embed],
-						content: null,
-						components: []
+			if (interaction.customId === 'report_users') {
+				// fetch member from select menu values
+				const fetchReportUser = await interaction.guild.members.fetch(interaction.values[0]).catch(e => false);
+
+				// check if not member exits
+				if (!fetchReportUser) {
+					return interaction.reply({
+						content: ":x: I can't find this member.",
+						ephemeral: true
 					})
 				}
+
+				// create modal
+				const modal = new Modal()
+				.setCustomId('modal_report')
+				.setTitle(`Report ${fetchReportUser.user.tag}`)
+
+				// create reason component
+				const reasonComponent = new TextInputComponent()
+				.setCustomId('modal_reason_value')
+				.setLabel('Reason of the report.')
+				.setStyle('LONG')
+				.setMinLength(10)
+				.setMaxLength(250)
+				.setPlaceholder('Keeps harassing and insulting me.')
+				.setRequired(true)
+
+				// map every component and add them
+				const rows = [reasonComponent].map((component) => modal.addComponents(component));
+
+				// show modal to user
+				showModal(...rows, {
+					client,
+					interaction
+				});
 			}
 		}
 	} catch (e) {
