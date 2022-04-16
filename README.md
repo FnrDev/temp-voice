@@ -1,7 +1,7 @@
-# BOT NAME
+# Temp Voice
 
 
-## BOT DESCRIPTION
+## 🔊 A discord bot for temp voice channels
 
 ---
 ### Note: Node.js 16.6.0 or newer is required.
@@ -18,8 +18,11 @@ npm install
 
 - .env
 ```sh
-TOKEN=YOUR_DISCORD_BOT_TOKEN
-BOTID=BOT_ID
-SERVERID=SERVER_ID
+TOKEN=YOUR_DISCORD_TOKEN
+BOTID=YOUR_BOT_ID
+SERVERID=YOUR_SERVER_ID
 OWNERS=["596227913209217024"]
+HOST=HOST_NAME
+USER=DB_USER
+DATABASE=TABAL_NAME
 ```
