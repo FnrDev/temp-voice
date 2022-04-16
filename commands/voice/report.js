@@ -4,7 +4,6 @@ module.exports = {
     name: "report",
     description: "Report a user in your current voice channel.",
     voiceOnly: true,
-    voiceOwnerOnly: true,
     tempOnly: true,
     run: async(interaction) => {
         // get all members in voice channel
