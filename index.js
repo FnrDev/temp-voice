@@ -5,6 +5,8 @@ const database = new mysql();
 const tempChannels = require('discord-temp-channels');
 const tempManager = new tempChannels(client);
 const settings = require('./settings.json');
+const modals = require('discord-modals');
+modals(client);
 client.commands = new Discord.Collection();
 client.slash = new Discord.Collection();
 client.aliases = new Discord.Collection();
