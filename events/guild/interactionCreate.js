@@ -56,6 +56,16 @@ module.exports = async(client, interaction) => {
 					})
 				}
 			}
+			if (command.allowManagers) {
+				if (voiceData.owner !== interaction.user.id) {
+					if (!voiceData.managers.includes(interaction.user.id)) {
+						return interaction.reply({
+							content: ":x: You must be manager in voice channel to do this command.",
+							ephemeral: true
+						})
+					}
+				}
+			}
 			if (command.voiceOwnerOnly) {
 				if (voiceData.owner !== interaction.user.id) {
 					return interaction.reply({

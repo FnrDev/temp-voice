@@ -43,7 +43,8 @@ module.exports = {
         // Reply to interaction
         interaction.reply({
             content: "**Please select a user to report**",
-            components: [row]
+            components: [row],
+            ephemeral: true
         });
     }
 }

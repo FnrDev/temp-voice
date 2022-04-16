@@ -10,8 +10,8 @@ module.exports = {
         }
     ],
     voiceOnly: true,
-    voiceOwnerOnly: true,
     tempOnly: true,
+    allowManagers: true,
     run: async(interaction) => {
         // get member from option
         const member = interaction.options.getMember('user');
