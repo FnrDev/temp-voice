@@ -70,7 +70,7 @@ module.exports = {
         });
 
         // create filter for component to only allow author of interaction to click buttons
-        const filter = (i) => i.customId === 'confirm_transfer' || 'cancel_transfer' && i.user.id === interaction.user.id;
+        const filter = (i) => ['confirm_transfer', 'cancel_transfer'].includes(i.customId) && i.user.id === interaction.user.id;
 
         // create component collector
         const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60_000 });
