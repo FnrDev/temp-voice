@@ -4,7 +4,7 @@ const { log_channel_id } = require('../../settings.json');
 module.exports = async(client, member, channel) => {
     // save channel data in database
     await client.db.set('channels', channel.id, {
-        owner: member.id,
+        owners: [member.id],
         channel: channel.id,
         managers: []
     });
