@@ -38,7 +38,7 @@ module.exports = {
         const fetchAllChannels = await client.db.all("channels");
 
         // filter channels by interaction user id
-        const filteredChannels = fetchAllChannels.filter(r => r.data.owner === interaction.user.id);
+        const filteredChannels = fetchAllChannels.filter(r => r.data.owners.includes(interaction.user.id));
 
         // check if not user has any channel
         if (!filteredChannels.length) {
@@ -80,7 +80,7 @@ module.exports = {
             // check if custom id is "confirm_transfer"
             if (i.customId === 'confirm_transfer') {
                 // change owner id to new id
-                voiceData['owner'] = user.id
+                await client.db.push('channels', `${voiceData.channel}.owners`, user.id)
 
                 // set new data
                 await client.db.set('channels', interaction.member.voice.channel.id, voiceData);

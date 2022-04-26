@@ -1,0 +1,52 @@
+const { MessageEmbed } = require('discord.js');
+
+module.exports = {
+    name: "voice-info",
+    description: "Show details about voice channel",
+    options: [
+        {
+            name: "channel",
+            description: "Channel to show info about",
+            type: 7,
+            channel_types: [2],
+            required: true
+        }
+    ],
+    timeout: 5000,
+    run: async(interaction, _, client) => {
+        // get channel
+        const channel = interaction.options.getChannel('channel');
+    
+        // find channel in database
+        const voiceChannelData = await client.db.get('channels', channel.id);
+
+        // check if there no temp channel in database
+        if (!voiceChannelData) {
+            return interaction.reply({
+                content: ':x: This is not a temp channel.',
+                ephemeral: true
+            })
+        }
+
+        // Create embed with data in it
+        const embed = new MessageEmbed()
+        .setTitle(`ℹ ${channel.name} Info`)
+        .setColor('RANDOM')
+        .setFooter({ text: interaction.user.tag, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
+        .addFields(
+            {
+                name: "Voice Owner(s)",
+                value: voiceChannelData.owners.map(r => { return `<@${r}>` }).join(", ")
+            },
+            {
+                name: "Voice Manager(s)",
+                value: voiceChannelData.managers.length > 0 ? voiceChannelData.managers.map(r => { return `<@${r}>` }).join(", ") : 'No Managers'
+            }
+        )
+
+        // send embed
+        interaction.reply({
+            embeds: [embed]
+        })
+    }
+}

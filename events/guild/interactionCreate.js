@@ -7,8 +7,11 @@ module.exports = async(client, interaction) => {
     if (interaction.isCommand() || interaction.isContextMenu()) {
 		if (!client.commands.has(interaction.commandName)) return;
 		if (!interaction.guild) return;
+		let voiceData;
+		if (interaction.member.voice.channel) {
+			voiceData = await client.db.get('channels', interaction.member.voice.channel?.id);
+		}
 		const command = client.commands.get(interaction.commandName);
-		const voiceData = await client.db.get('channels', interaction.member.voice.channel.id);
 		try {
 			if (command.timeout) {
 				if (Timeout.has(`${interaction.user.id}${command.name}`)) {
@@ -57,17 +60,15 @@ module.exports = async(client, interaction) => {
 				}
 			}
 			if (command.allowManagers) {
-				if (voiceData.owner !== interaction.user.id) {
-					if (!voiceData.managers.includes(interaction.user.id)) {
-						return interaction.reply({
-							content: ":x: You must be manager in voice channel to do this command.",
-							ephemeral: true
-						})
-					}
+				if (!voiceData.managers.includes(interaction.user.id)) {
+					return interaction.reply({
+						content: ":x: You must be manager in voice channel to do this command.",
+						ephemeral: true
+					})
 				}
 			}
 			if (command.voiceOwnerOnly) {
-				if (voiceData.owner !== interaction.user.id) {
+				if (!voiceData.owners.includes(interaction.user.id)) {
 					return interaction.reply({
 						content: ":x: You must be owner of the channel.",
 						ephemeral: true

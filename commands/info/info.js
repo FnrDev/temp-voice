@@ -7,16 +7,7 @@ module.exports = {
     timeout: 5000,
     usage: "/info",
     category: "info",
-    run: async(interaction, client) => {
-        const loopGuilds = [];
-        client.guilds.cache.forEach((guild, i) => {
-            loopGuilds.push(guild.memberCount);
-        });
-        let TotalUsers = 0;
-        for (let i = 0; i < loopGuilds.length; i++) {
-            if (isNaN(loopGuilds[i])) continue;
-            TotalUsers += loopGuilds[i];
-        }
+    run: async(interaction, _, client) => {
         const embed = new MessageEmbed()
         .setTitle('__Bot Stats__')
         .setColor('RANDOM')
@@ -30,7 +21,7 @@ module.exports = {
             },
             {
                 name: "<a:IconUsers:856146782451007508> Total Users: ",
-                value: TotalUsers.toLocaleString(),
+                value: client.users.cache.size.toLocaleString(),
                 inline: true
             },
             {
