@@ -54,7 +54,7 @@ module.exports = {
         // collect event
         collector.on('collect', i => {
             if (i.customId === 'manager_remove') {
-                // finde user id index
+                // find user id index
                 const index = voiceData.managers.indexOf(i.values[0]);
                 if (index > -1) {
                     voiceData.managers.splice(index, 1);
