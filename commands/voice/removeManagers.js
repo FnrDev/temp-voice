@@ -70,5 +70,14 @@ module.exports = {
                 })
             }
         })
+
+        // end collector
+        collector.on('end', i => {
+            // edit interaction
+            interaction.editReply({
+                content: '⏲ TIME IS UP!',
+                components: []
+            })
+        })
     }
 }
