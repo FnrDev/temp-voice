@@ -73,6 +73,7 @@ module.exports = {
 
         // end collector
         collector.on('end', i => {
+            if (collector.collected) return;
             // edit interaction
             interaction.editReply({
                 content: '⏲ TIME IS UP!',

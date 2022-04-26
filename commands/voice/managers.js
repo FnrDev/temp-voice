@@ -78,6 +78,7 @@ module.exports = {
 
         // end collector
         collector.on('end', () => {
+            if (collector.collected) return;
             interaction.editReply({
                 content: '⏲ - TIME OVER!',
                 components: []
