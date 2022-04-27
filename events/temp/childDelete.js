@@ -1,4 +1,3 @@
-const { WebhookClient } = require('discord.js');
 const { log_channel_id } = require('../../settings.json');
 
 module.exports = async(client, member, channel) => {
