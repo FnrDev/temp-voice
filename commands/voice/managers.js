@@ -1,88 +1,86 @@
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 
 module.exports = {
     name: "managers",
     description: "Add managers to control in your voice channel",
-    options: [
-        {
-            name: "user",
-            description: "User to be manager",
-            type: 6,
-            required: true
-        }
-    ],
     tempOnly: true,
     tempOwnerOnly: true,
     voiceOnly: true,
-    run: async(interaction, _, client) => {
-        // get user from option
-        const user = interaction.options.getUser('user');
+    run: async(interaction, voiceData, client) => {
+        // assign to this array latter
+        const allManagers = [];
 
-        // check if user already manager in voice channel
-        const isManager = await client.db.includes('channels', `${interaction.member.voice.channel.id}.managers`, user.id);
-        if (isManager) {
+        // get all voice members
+        const voiceMembers = interaction.member.voice.channel.members;
+
+        // check if there no members in channel
+        if (voiceMembers.size == 1) {
             return interaction.reply({
-                content: `:x: ${user} is already manager in your voice channel`,
+                content: ':x: There are no members in your voice channel',
                 ephemeral: true
             })
         }
 
-        // create row with button components
+        // loop every member in voice channel
+        voiceMembers.map(member => {
+            allManagers.push({
+                label: member.user.tag,
+                description: member.id,
+                value: member.id
+            })
+        })
+
+        // create select menu
         const row = new MessageActionRow()
         .addComponents(
-            new MessageButton()
-            .setCustomId('managers_accept_transfer')
-            .setLabel('Accept')
-            .setStyle('SUCCESS')
-        )
-        .addComponents(
-            new MessageButton()
-            .setCustomId('managers_deny_transfer')
-            .setLabel('Cancel')
-            .setStyle('DANGER')
+            new MessageSelectMenu()
+            .setCustomId('managers_select')
+            .setPlaceholder('Choose managers')
+            .addOptions(allManagers)
+            .setMaxValues(voiceMembers.size)
         )
 
-        // send components
         interaction.reply({
-            content: `⚠ **Are you sure you want to add ${user} to voice managers?**`,
+            content: 'Select user in your voice channel to be a voice manager',
             components: [row]
         })
 
-        // create filter for components 
-        const filter = (i) => ['managers_accept_transfer', 'managers_deny_transfer'].includes(i.customId) && i.user.id === interaction.user.id;
+        // create filter
+        const filter = (i) => i.customId === 'managers_select' && i.user.id === interaction.user.id;
 
         // create collector
         const collector = interaction.channel.createMessageComponentCollector({ filter, time: 30_000 });
 
-        // collect event
-        collector.on('collect', async i => {
-            if (i.customId === 'managers_accept_transfer') {
-                // push user id to managers array
-                await client.db.push('channels', `${interaction.member.voice.channel.id}.managers`, user.id);
-
-                // edit interaction
-                interaction.editReply({
-                    content: `✅ ${user} has been added to channel managers`,
+        collector.on('collect', async (i) => {
+            // check if user manager
+            const alreadyManagers = []
+            i.values.map((member) => {
+                if (voiceData.managers.includes(member)) {
+                    alreadyManagers.push(member);
+                }
+            });
+            if (alreadyManagers.length) {
+                // send interaction with managers mention
+                return interaction.editReply({
+                    content: `:x: ${alreadyManagers.map(r => { return `<@${r}>` }).join(", ")} is already manager${allManagers.length > 2 ? 's' : ''} in your voice channel.`,
                     components: []
                 });
             }
-
-            if (i.customId === 'managers_deny_transfer') {
-                // remove component if user cancel
-                interaction.editReply({
-                    content: '**🤔 - Canceling ...**',
-                    components: []
-                });
-            }
+            i.values.forEach(async (member) => {
+                await client.db.push('channels', `${interaction.member.voice.channelId}.managers`, member);
+            })
+            return interaction.editReply({
+                content: `✅ ${i.values.map(member => { return `<@${member}>` }).join(", ")} has been added to voice managers.`,
+                components: []
+            })
         })
 
-        // end collector
-        collector.on('end', () => {
+        collector.on('end', i => {
             if (collector.collected) return;
-            interaction.editReply({
-                content: '⏲ - TIME OVER!',
+            return interaction.editReply({
+                content: 'TIME ENDED!',
                 components: []
-            });
+            })
         })
     }
 }

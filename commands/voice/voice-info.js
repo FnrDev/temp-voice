@@ -8,14 +8,13 @@ module.exports = {
             name: "channel",
             description: "Channel to show info about",
             type: 7,
-            channel_types: [2],
-            required: true
+            channel_types: [2]
         }
     ],
     timeout: 5000,
     run: async(interaction, _, client) => {
         // get channel
-        const channel = interaction.options.getChannel('channel');
+        const channel = interaction.options.getChannel('channel') || interaction.member.voice.channel;
     
         // find channel in database
         const voiceChannelData = await client.db.get('channels', channel.id);
@@ -41,6 +40,10 @@ module.exports = {
             {
                 name: "Voice Manager(s)",
                 value: voiceChannelData.managers.length > 0 ? voiceChannelData.managers.map(r => { return `<@${r}>` }).join(", ") : 'No Managers'
+            },
+            {
+                name: "Allowed User(s)",
+                value: voiceChannelData.allowed_users.length > 0 ? voiceChannelData.allowed_users.map(r => { return `<@${r}>` }).join(", ") : 'No Users'
             }
         )
 
