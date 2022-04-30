@@ -41,6 +41,10 @@ module.exports = {
             {
                 name: "Voice Manager(s)",
                 value: voiceChannelData.managers.length > 0 ? voiceChannelData.managers.map(r => { return `<@${r}>` }).join(", ") : 'No Managers'
+            },
+            {
+                name: "Allowed User(s)",
+                value: voiceChannelData.allowed_users.length > 0 ? voiceChannelData.allowed_users.map(r => { return `<@${r}>` }).join(", ") : 'No Users'
             }
         )
 

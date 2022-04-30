@@ -13,7 +13,7 @@ module.exports = {
     voiceOnly: true,
     tempOnly: true,
     allowManagers: true,
-    run: async(interaction) => {
+    run: async(interaction, _, client) => {
         // get member from option
         const member = interaction.options.getMember('user');
 
@@ -28,6 +28,9 @@ module.exports = {
         await interaction.member.voice.channel.permissionOverwrites.edit(member.id, {
             CONNECT: true
         }).catch(console.error)
+
+        // push user id to "allowd_users" array in database
+        await client.db.push('channels', `${interaction.member.voice.channelId}.allowed_users`, member.id);
 
         // Reply to interaction
         interaction.reply({

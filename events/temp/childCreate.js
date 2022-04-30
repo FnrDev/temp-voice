@@ -5,7 +5,8 @@ module.exports = async(client, member, channel) => {
     await client.db.set('channels', channel.id, {
         owners: [member.id],
         channel: channel.id,
-        managers: []
+        managers: [],
+        allowed_users: []
     });
 
     // allow channel owner with connect, manage channel

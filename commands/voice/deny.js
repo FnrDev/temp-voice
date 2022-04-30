@@ -12,7 +12,7 @@ module.exports = {
     voiceOnly: true,
     tempOnly: true,
     allowManagers: true,
-    run: async(interaction) => {
+    run: async(interaction, voiceData, client) => {
         // get member from option
         const member = interaction.options.getMember('user');
         
@@ -28,6 +28,15 @@ module.exports = {
         await interaction.member.voice.channel.permissionOverwrites.edit(member.id, {
             CONNECT: false
         }).catch(console.error);
+
+        // find index of user id in database
+        const index = voiceData.allowed_users.indexOf(member.id);
+        if (index > -1) {
+            voiceData.allowed_users.splice(index, 1);
+        }
+
+        // set new data
+        await client.db.set('channels', voiceData.channel, voiceData);
 
         // Reply to interaction.
         interaction.reply({
