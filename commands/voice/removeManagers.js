@@ -37,6 +37,7 @@ module.exports = {
             .setCustomId('manager_remove')
             .setPlaceholder('Choose manager')
             .addOptions(managers)
+            .setMaxValues(fetchManagers.size)
         )
 
         // send select menu component
@@ -54,18 +55,21 @@ module.exports = {
         // collect event
         collector.on('collect', i => {
             if (i.customId === 'manager_remove') {
-                // find user id index
-                const index = voiceData.managers.indexOf(i.values[0]);
-                if (index > -1) {
-                    voiceData.managers.splice(index, 1);
-                }
+                // loop for every manager has been selected
+                i.values.map((r) => {
+                    // find user id index
+                    const index = voiceData.managers.indexOf(r);
+                    if (index > -1) {
+                        voiceData.managers.splice(index, 1);
+                    }
+                })
 
                 // set new data
                 client.db.set('channels', voiceData.channel, voiceData);
 
                 // edit interaction
                 interaction.editReply({
-                    content: `✅ <@${i.values[0]}> has been removed from voice managers`,
+                    content: `✅ ${i.values.map(r => { return `<@${r}>` }).join(", ")} has been removed from voice managers`,
                     components: []
                 })
             }
