@@ -25,8 +25,9 @@ module.exports = {
         fetchManagers.forEach(member => {
             managers.push({
                 label: member.user.tag,
-                description: member.id,
-                value: member.id
+                description: voiceData.owners.includes(member.id) ? 'Voice Owner & Manager' : 'Voice Manager',
+                value: member.id,
+                emoji: voiceData.owners.includes(member.id) ? '<:BadgeOwnerCrown:946893402887315516>' : '<:topggCommunityManager:916114556852535307>'
             })
         });
         
