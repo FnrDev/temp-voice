@@ -28,7 +28,6 @@ require('dotenv').config();
     console.log('[DataBase] DataBase Connected.'.green);
     client.db = db;
     db.create("channels");
-    db.create("webhooks");
   })
 })();
 
