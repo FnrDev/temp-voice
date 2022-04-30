@@ -100,6 +100,7 @@ module.exports = {
 
         // check for end collector
         collector.on('end', async (i) => {
+            if (collector.collected) return;
             interaction.editReply({
                 content: `⏲ Time is over!`,
                 components: []
