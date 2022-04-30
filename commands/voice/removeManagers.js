@@ -25,7 +25,7 @@ module.exports = {
         fetchManagers.forEach(member => {
             managers.push({
                 label: member.user.tag,
-                description: member.id,
+                description: voiceData.owners.includes(member.id) ? 'Voice Owner' : 'Voice Manager',
                 value: member.id
             })
         });
