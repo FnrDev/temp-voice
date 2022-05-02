@@ -17,9 +17,9 @@ module.exports = {
         const channel = interaction.options.getChannel('channel') || interaction.member.voice.channel;
 
         // check if member in voice channel
-        if (!interaction.member.voice.channel) {
+        if (!channel) {
             return interaction.reply({
-                content: ':x: You must be in voice channel to use this command.',
+                content: ":x: I can't find your temp voice channel.",
                 ephemeral: true
             })
         }
