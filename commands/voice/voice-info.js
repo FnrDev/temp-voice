@@ -15,6 +15,14 @@ module.exports = {
     run: async(interaction, _, client) => {
         // get channel
         const channel = interaction.options.getChannel('channel') || interaction.member.voice.channel;
+
+        // check if member in voice channel
+        if (!channel) {
+            return interaction.reply({
+                content: ":x: I can't find your temp voice channel, Please select channel from command options",
+                ephemeral: true
+            })
+        }
     
         // find channel in database
         const voiceChannelData = await client.db.get('channels', channel.id);

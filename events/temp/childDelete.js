@@ -10,6 +10,6 @@ module.exports = async(client, member, channel) => {
 
     // send log to channel
     logChannel.send({
-        content: `❌ Channel Deleted! owner ${member.user.tag} (${member.id})`
+        content: `❌ Channel Deleted! **owner:** ${member.user.tag} (${member.id})`
     })
 }
