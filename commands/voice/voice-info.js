@@ -19,7 +19,7 @@ module.exports = {
         // check if member in voice channel
         if (!channel) {
             return interaction.reply({
-                content: ":x: I can't find your temp voice channel.",
+                content: ":x: I can't find your temp voice channel, Please select channel from command options",
                 ephemeral: true
             })
         }
