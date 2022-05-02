@@ -6,7 +6,7 @@ module.exports = {
     timeout: 5000,
     category: "general",
     usage: "/ping",
-    run: async(interaction, client) => {
+    run: async(interaction, _, client) => {
         await interaction.reply('🏓 Pong!')
         const msg = await interaction.fetchReply()
         const embed = new Discord.MessageEmbed()
