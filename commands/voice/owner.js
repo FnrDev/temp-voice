@@ -80,10 +80,7 @@ module.exports = {
             // check if custom id is "confirm_transfer"
             if (i.customId === 'confirm_transfer') {
                 // change owner id to new id
-                await client.db.push('channels', `${voiceData.channel}.owners`, user.id)
-
-                // set new data
-                await client.db.set('channels', interaction.member.voice.channel.id, voiceData);
+                await client.db.push('channels', `${voiceData.channel}.owners`, user.id);
 
                 // edit interaction and remove components
                 interaction.editReply({
