@@ -6,7 +6,8 @@ module.exports = async(client, member, channel) => {
         owners: [member.id],
         channel: channel.id,
         managers: [],
-        allowed_users: []
+        allowed_users: [],
+        createdAt: Date.now()
     });
 
     // allow channel owner with connect, manage channel

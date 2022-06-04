@@ -82,7 +82,7 @@ module.exports = {
                 await client.db.push('channels', `${interaction.member.voice.channel.id}.owners`, user.id);
 
                 // edit interaction
-                interaction.editReply({
+                return interaction.editReply({
                     content: `✅ Added new owner ${user}!`,
                     components: []
                 });
