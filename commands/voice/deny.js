@@ -26,7 +26,8 @@ module.exports = {
 
         // Edit voice channel permission to set "CONNECT" to false
         await interaction.member.voice.channel.permissionOverwrites.edit(member.id, {
-            CONNECT: false
+            CONNECT: false,
+            SEND_MESSAGES: false
         }).catch(console.error);
 
         // find index of user id in database

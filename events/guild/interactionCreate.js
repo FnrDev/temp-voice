@@ -1,7 +1,6 @@
 const Timeout = new Set()
 const { MessageEmbed } = require('discord.js');
 const humanizeDuration = require("humanize-duration");
-const { Modal, TextInputComponent, showModal } = require('discord-modals');
 
 module.exports = async(client, interaction) => {
     if (interaction.isCommand() || interaction.isContextMenu()) {
@@ -86,48 +85,5 @@ module.exports = async(client, interaction) => {
 			console.error(error);
 			await interaction.reply({ content: ':x: There was an error while executing this command!', ephemeral: true });
 		}
-	}
-	try {
-		if (interaction.isSelectMenu()) {
-			if (interaction.customId === 'report_users') {
-				// fetch member from select menu values
-				const fetchReportUser = await interaction.guild.members.fetch(interaction.values[0]).catch(e => false);
-
-				// check if not member exits
-				if (!fetchReportUser) {
-					return interaction.reply({
-						content: ":x: I can't find this member.",
-						ephemeral: true
-					})
-				}
-
-				// create modal
-				const modal = new Modal()
-				.setCustomId('modal_report')
-				.setTitle(`Report ${fetchReportUser.user.tag}`)
-
-				// create reason component
-				const reasonComponent = new TextInputComponent()
-				.setCustomId('modal_reason_value')
-				.setLabel('Reason of the report.')
-				.setStyle('LONG')
-				.setMinLength(10)
-				.setMaxLength(250)
-				.setPlaceholder('Keeps harassing and insulting me.')
-				.setRequired(true)
-
-				// map every component and add them
-				const rows = [reasonComponent].map((component) => modal.addComponents(component));
-
-				// show modal to user
-				showModal(...rows, {
-					client,
-					interaction
-				});
-			}
-		}
-	} catch (e) {
-		console.error(e)
-		return false;
 	}
 } 
