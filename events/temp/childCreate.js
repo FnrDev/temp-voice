@@ -13,12 +13,14 @@ module.exports = async(client, member, channel) => {
     // allow channel owner with connect, manage channel
     await channel.permissionOverwrites.edit(member.user, {
         MANAGE_CHANNELS: true,
-        CONNECT: true
+        CONNECT: true,
+        SEND_MESSAGES: true
     });
 
     // deny connect permission from everyone
     await channel.permissionOverwrites.edit(member.guild.id, {
-        CONNECT: false
+        CONNECT: false,
+        SEND_MESSAGES: false
     });
 
     console.log(`✅ Done! created temp channel for ${member.user.tag} (${member.id})`);

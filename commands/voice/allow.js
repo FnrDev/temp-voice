@@ -26,7 +26,8 @@ module.exports = {
 
         // Edit voice channel permission and allow them.
         await interaction.member.voice.channel.permissionOverwrites.edit(member.id, {
-            CONNECT: true
+            CONNECT: true,
+            SEND_MESSAGES: true
         }).catch(console.error)
 
         // push user id to "allowd_users" array in database
